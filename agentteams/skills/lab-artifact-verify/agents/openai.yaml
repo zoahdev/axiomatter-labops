@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Artifact Verify"
+  short_description: "Verify traces, evidence, and replay readiness"
+  default_prompt: "Use $lab-artifact-verify to audit this run and produce a reproducibility verdict."

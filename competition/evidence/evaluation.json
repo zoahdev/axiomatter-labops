@@ -1,0 +1,61 @@
+{
+  "evaluation": "axiomatter-labops-deterministic-v1",
+  "scientific_claim": false,
+  "dataset_class": "illustrative-demo",
+  "dataset_sha256": "ad438c3d4e988dbb94391febcf89058a0851db69863e4f89109e053f66df8296",
+  "scenario_count": 4,
+  "metrics": {
+    "audit_pass_rate": 1.0,
+    "trace_coverage": 1.0,
+    "high_risk_block_rate": 1.0,
+    "zero_unverified_claim_rate": 1.0,
+    "deterministic_replay_rate": 1.0
+  },
+  "runs": [
+    {
+      "objective": "balanced cathode",
+      "run_id": "axm-79151e4db709",
+      "audit": "pass",
+      "trace_coverage": 1.0,
+      "verified_steps": 6,
+      "unverified_claims": 0,
+      "approval": "blocked_pending_human_approval",
+      "feasible_candidates": 6
+    },
+    {
+      "objective": "high capacity",
+      "run_id": "axm-74133a231c36",
+      "audit": "pass",
+      "trace_coverage": 1.0,
+      "verified_steps": 6,
+      "unverified_claims": 0,
+      "approval": "blocked_pending_human_approval",
+      "feasible_candidates": 5
+    },
+    {
+      "objective": "safety first",
+      "run_id": "axm-b46e342d1136",
+      "audit": "pass",
+      "trace_coverage": 1.0,
+      "verified_steps": 6,
+      "unverified_claims": 0,
+      "approval": "blocked_pending_human_approval",
+      "feasible_candidates": 3
+    },
+    {
+      "objective": "intentionally infeasible",
+      "run_id": "axm-22ff5b7d2c6f",
+      "audit": "pass",
+      "trace_coverage": 1.0,
+      "verified_steps": 6,
+      "unverified_claims": 0,
+      "approval": "blocked_pending_human_approval",
+      "feasible_candidates": 0
+    }
+  ],
+  "limitations": [
+    "Measures engineering invariants, not scientific accuracy.",
+    "Uses illustrative demo records with no claim of experimental provenance.",
+    "AgentTeams container execution is not included in this local reference evaluation."
+  ]
+}

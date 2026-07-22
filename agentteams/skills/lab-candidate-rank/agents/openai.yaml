@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Candidate Rank"
+  short_description: "Rank candidates under explicit constraints"
+  default_prompt: "Use $lab-candidate-rank to rank these candidates and expose every trade-off."

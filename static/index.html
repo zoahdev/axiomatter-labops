@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Axiomatter LabOps - 研发证据控制面</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #07100d;
+      --panel: #0d1915;
+      --line: rgba(202, 255, 221, .14);
+      --text: #f3fff7;
+      --muted: #96aa9d;
+      --green: #7cf2a8;
+      --amber: #ffc66b;
+      --red: #ff8c87;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 8% -5%, rgba(124, 242, 168, .14), transparent 29rem),
+        radial-gradient(circle at 92% 7%, rgba(61, 142, 102, .12), transparent 28rem),
+        var(--bg);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .16;
+      background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, #000, transparent 72%);
+    }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: auto; padding: 26px 0 72px; position: relative; }
+    header { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+    .brand { display: flex; align-items: center; gap: 11px; font-weight: 760; letter-spacing: .06em; }
+    .mark { width: 28px; height: 28px; border: 1px solid var(--green); border-radius: 8px; position: relative; transform: rotate(45deg); }
+    .mark::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 18px var(--green); }
+    .mode { color: var(--muted); font: 11px var(--mono); border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; }
+    .mode b { color: var(--green); font-weight: 700; }
+    .hero { padding: 92px 0 42px; max-width: 930px; }
+    .eyebrow { color: var(--green); font: 700 11px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+    h1 { font-size: clamp(46px, 7vw, 88px); line-height: .96; letter-spacing: -.06em; margin: 16px 0 24px; max-width: 930px; }
+    h1 span { color: var(--green); }
+    .lead { max-width: 720px; color: #b8c9be; font-size: 17px; line-height: 1.75; }
+    .truth { margin-top: 20px; padding-left: 15px; border-left: 2px solid var(--amber); color: #c7b58d; font-size: 13px; line-height: 1.65; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: rgba(13,25,21,.72); backdrop-filter: blur(15px); }
+    .stat { padding: 20px; border-right: 1px solid var(--line); }
+    .stat:last-child { border-right: 0; }
+    .stat b { display: block; color: var(--green); font: 800 27px var(--mono); }
+    .stat small { display: block; color: var(--muted); margin-top: 7px; font-size: 11px; }
+    .panel { background: rgba(13, 25, 21, .9); border: 1px solid var(--line); border-radius: 20px; }
+    .composer { margin: 24px 0; padding: 22px; }
+    label { display: block; margin-bottom: 10px; color: var(--muted); font: 700 11px var(--mono); letter-spacing: .08em; }
+    textarea { width: 100%; min-height: 102px; resize: vertical; color: var(--text); background: #06100c; border: 1px solid var(--line); border-radius: 13px; padding: 15px; outline: none; font: 14px/1.7 inherit; }
+    textarea:focus { border-color: rgba(124,242,168,.55); box-shadow: 0 0 0 3px rgba(124,242,168,.07); }
+    .actions { display: flex; justify-content: space-between; gap: 18px; align-items: center; margin-top: 14px; }
+    .fine { color: var(--muted); font-size: 11px; line-height: 1.55; }
+    button { border: 0; border-radius: 11px; padding: 13px 19px; min-width: 190px; background: var(--green); color: #07100d; font-weight: 850; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: wait; }
+    .error { color: var(--red); font-size: 13px; margin-top: 10px; }
+    #output { display: none; }
+    #output.visible { display: block; }
+    .runbar { display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 15px 18px; margin-bottom: 18px; font: 11px var(--mono); color: var(--muted); }
+    .runbar strong { color: var(--green); }
+    .grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; }
+    .section { padding: 21px; overflow: hidden; }
+    .head { display: flex; justify-content: space-between; align-items: end; gap: 15px; margin-bottom: 16px; }
+    h2 { font-size: 17px; margin: 0; }
+    .head span { color: var(--muted); font: 10px var(--mono); }
+    .trace { border-top: 1px solid var(--line); }
+    .step { display: grid; grid-template-columns: 31px 1fr auto; gap: 13px; padding: 15px 0; border-bottom: 1px solid var(--line); align-items: start; }
+    .seq { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 8px; color: var(--green); border: 1px solid rgba(124,242,168,.35); font: 700 11px var(--mono); }
+    .step b { font-size: 13px; }
+    .step p { margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .skill { color: var(--green); font: 10px var(--mono); white-space: nowrap; }
+    .candidate { display: grid; grid-template-columns: 54px 1fr auto; align-items: center; gap: 13px; padding: 14px 0; border-top: 1px solid var(--line); }
+    .score { width: 47px; height: 47px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--green); color: var(--green); font: 750 12px var(--mono); }
+    .name { font-size: 13px; font-weight: 740; }
+    .meta { color: var(--muted); font: 10px/1.5 var(--mono); margin-top: 4px; }
+    .pill { border: 1px solid var(--line); border-radius: 999px; padding: 5px 7px; color: var(--muted); font: 9px var(--mono); }
+    .pill.ok { color: var(--green); }
+    .decision { margin-top: 18px; padding: 17px; border: 1px solid rgba(255,198,107,.28); border-radius: 14px; background: rgba(255,198,107,.055); }
+    .decision b { color: var(--amber); font: 750 11px var(--mono); }
+    .decision h3 { font-size: 15px; margin: 9px 0; }
+    .decision p { color: #c5b994; font-size: 11px; line-height: 1.65; margin: 0; }
+    .audit { margin-top: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .audit .panel { padding: 18px; }
+    .audit b { color: var(--green); font: 800 22px var(--mono); }
+    .audit span { display: block; color: var(--muted); font-size: 10px; margin-top: 6px; }
+    @media (max-width: 800px) {
+      .hero { padding-top: 64px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat:nth-child(2) { border-right: 0; }
+      .stat:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .grid { grid-template-columns: 1fr; }
+      .actions { flex-direction: column; align-items: stretch; }
+      button { width: 100%; }
+      .audit { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="brand"><span class="mark"></span> AXIOMATTER LABOPS</div>
+      <div class="mode"><b>● OFFLINE</b> / ZERO-DEPENDENCY DEMO</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">AgentTeams × Evidence-first R&D</div>
+      <h1>让每个研发判断<br><span>都有证据。</span></h1>
+      <p class="lead">六个专业 Agent 把自然语言目标转成约束、核验数据来源、筛选候选、设计下一步实验，并在物理执行前强制进入人工审批。每一步都可追踪、可回放、可审计。</p>
+      <div class="truth">真实性边界：本演示只证明多 Agent 工程闭环。内置材料数据为 illustrative demo，不是实验结果，不构成科学发现。</div>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><b>6</b><small>专业 Agent 身份</small></div>
+      <div class="stat"><b>6</b><small>可复用 Skill 契约</small></div>
+      <div class="stat"><b>100%</b><small>决策 Trace 覆盖</small></div>
+      <div class="stat"><b>0</b><small>放行的无证据声明</small></div>
+    </section>
+
+    <section class="panel composer">
+      <label for="brief">R&D BRIEF / 研发目标</label>
+      <textarea id="brief">筛选兼顾高比容量、循环稳定性和热安全的下一代低钴电池正极材料；比容量不低于 170 mAh/g，安全优先于成本。</textarea>
+      <div class="actions">
+        <div class="fine">本地确定性执行，不需要 API Key。物理实验、付费、凭证和外部写入一律默认阻断。</div>
+        <button id="run">启动证据闭环</button>
+      </div>
+      <div id="error" class="error"></div>
+    </section>
+
+    <section id="output">
+      <div class="panel runbar"><span>RUN <strong id="run-id"></strong></span><span>AUDIT <strong id="audit-state"></strong></span></div>
+      <div class="grid">
+        <section class="panel section">
+          <div class="head"><h2>Agent 协同 Trace</h2><span id="trace-count"></span></div>
+          <div id="trace" class="trace"></div>
+        </section>
+        <section class="panel section">
+          <div class="head"><h2>候选前沿</h2><span>DEMO DATA</span></div>
+          <div id="candidates"></div>
+          <div class="decision">
+            <b>HUMAN APPROVAL GATE</b>
+            <h3 id="decision-title"></h3>
+            <p id="decision-copy"></p>
+          </div>
+        </section>
+      </div>
+      <div class="audit">
+        <div class="panel"><b id="verified"></b><span>已验证执行步骤</span></div>
+        <div class="panel"><b id="claims"></b><span>无证据声明</span></div>
+        <div class="panel"><b id="blocked"></b><span>已阻断高风险动作</span></div>
+      </div>
+    </section>
+  </main>
+  <script>
+    const byId = id => document.getElementById(id);
+    const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    const run = byId('run');
+    run.addEventListener('click', async () => {
+      run.disabled = true;
+      run.textContent = 'Agent 协同中…';
+      byId('error').textContent = '';
+      try {
+        const response = await fetch('/api/run', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({brief: byId('brief').value})
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || '执行失败');
+        byId('run-id').textContent = data.run_id;
+        byId('audit-state').textContent = data.audit.status.toUpperCase();
+        byId('trace-count').textContent = `${data.trace.length} VERIFIED STEPS`;
+        byId('trace').innerHTML = data.trace.map(step => `
+          <article class="step">
+            <div class="seq">${step.sequence}</div>
+            <div><b>${escapeHtml(step.role)}</b><p>${escapeHtml(step.summary)}</p></div>
+            <div class="skill">${escapeHtml(step.skill)}</div>
+          </article>`).join('');
+        byId('candidates').innerHTML = data.candidates.slice(0, 5).map(item => `
+          <article class="candidate">
+            <div class="score">${Number(item.score).toFixed(1)}</div>
+            <div><div class="name">${escapeHtml(item.name)}</div><div class="meta">${escapeHtml(item.formula)} · uncertainty ${item.uncertainty}%</div></div>
+            <div class="pill ${item.feasible ? 'ok' : ''}">${item.feasible ? 'FEASIBLE' : 'TRADE-OFF'}</div>
+          </article>`).join('');
+        byId('decision-title').textContent = data.approval.status;
+        byId('decision-copy').textContent = `${data.approval.action} 被阻断，必须由 ${data.approval.required_approver_role} 审批。${data.approval.rollback}`;
+        byId('verified').textContent = data.metrics.verified_steps;
+        byId('claims').textContent = data.metrics.unverified_claims;
+        byId('blocked').textContent = data.metrics.high_risk_actions_blocked;
+        byId('output').classList.add('visible');
+        byId('output').scrollIntoView({behavior:'smooth', block:'start'});
+      } catch (error) {
+        byId('error').textContent = error.message;
+      } finally {
+        run.disabled = false;
+        run.textContent = '启动证据闭环';
+      }
+    });
+  </script>
+</body>
+</html>

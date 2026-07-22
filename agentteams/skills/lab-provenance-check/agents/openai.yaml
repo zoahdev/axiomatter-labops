@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Provenance Check"
+  short_description: "Classify evidence and enforce provenance boundaries"
+  default_prompt: "Use $lab-provenance-check to classify these records and flag missing provenance."

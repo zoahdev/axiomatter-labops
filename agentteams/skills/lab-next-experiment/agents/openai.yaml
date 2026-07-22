@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Next Experiment"
+  short_description: "Choose a high-information next experiment"
+  default_prompt: "Use $lab-next-experiment to propose the next test with assumptions and success gates."

@@ -1,0 +1,14 @@
+material_id,name,formula,family,specific_capacity,voltage,cycle_retention,safety,cost,evidence_level
+demo-lfp,Lithium iron phosphate,LiFePO4,olivine,165,3.45,95,9.4,9.0,0.95
+demo-lmfp,Lithium manganese iron phosphate,LiMn0.6Fe0.4PO4,olivine,168,3.85,91,8.4,7.8,0.70
+demo-lmo,Lithium manganese oxide,LiMn2O4,spinel,120,4.00,84,7.6,8.4,0.88
+demo-lnmo,Lithium nickel manganese oxide,LiNi0.5Mn1.5O4,spinel,146,4.70,86,6.5,6.4,0.76
+demo-nmc111,NMC 111,LiNi0.33Mn0.33Co0.33O2,layered,158,3.70,91,6.3,5.4,0.92
+demo-nmc532,NMC 532,LiNi0.5Mn0.3Co0.2O2,layered,170,3.75,90,5.8,5.8,0.88
+demo-nmc622,NMC 622,LiNi0.6Mn0.2Co0.2O2,layered,182,3.78,88,5.2,5.1,0.88
+demo-nmc811,NMC 811,LiNi0.8Mn0.1Co0.1O2,layered,202,3.82,85,4.2,4.8,0.86
+demo-nca,Nickel cobalt aluminum oxide,LiNi0.8Co0.15Al0.05O2,layered,205,3.80,84,4.0,4.4,0.87
+demo-lco,Lithium cobalt oxide,LiCoO2,layered,150,3.90,80,4.4,2.8,0.94
+demo-lmr,Li-rich manganese oxide,Li1.2Mn0.54Ni0.13Co0.13O2,layered,245,3.60,75,4.8,6.2,0.58
+demo-na-nvp,Sodium vanadium phosphate,Na3V2(PO4)3,nasicon,118,3.40,93,8.1,6.8,0.74
+

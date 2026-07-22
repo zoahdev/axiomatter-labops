@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Approval Gate"
+  short_description: "Block risky actions pending human approval"
+  default_prompt: "Use $lab-approval-gate to classify this action and enforce the required approval boundary."

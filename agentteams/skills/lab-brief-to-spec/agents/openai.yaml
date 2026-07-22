@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lab Brief to Spec"
+  short_description: "Convert R&D briefs into explicit constraints"
+  default_prompt: "Use $lab-brief-to-spec to turn this R&D brief into a bounded, reviewable specification."
